@@ -1,0 +1,127 @@
+#!/bin/bash
+
+
+# Description: This script performs addition and subtraction operations. It supports two modes of operation: 
+# 1. With three parameters for addition or subtraction.
+# 2. With no parameters, providing a menu-driven interface for calculations or exiting.
+
+# Function to perform addition
+add() {
+    result=$(( $1 + $2 ))
+    echo "The sum of $1 plus $2 equals $result"
+}
+
+# Function to perform subtraction
+subtract() {
+    result=$(( $1 - $2 ))
+    echo "The subtraction of $1 minus $2 equals $result"
+}
+
+# Function to display Menu 1
+menu1() {
+    clear
+    echo "C) Calculation"
+    echo "X) Exit"
+}
+
+# Function to display Menu 2
+menu2() {
+    clear
+    echo "Please enter an integer number or X to exit:"
+}
+
+# Function to display Menu 3
+menu3() {
+    clear
+    echo "+) Add"
+    echo "-) Subtract"
+    echo "X) Exit"
+}
+
+# Main script logic
+# this part of script runs when the user has entered no parameters, so it displays a series of menus to get the user's input and then performs the desired calculation.
+if [ "$#" -eq 0 ]; then
+    while true; do
+        menu1
+        read -r choice
+        case $choice in
+            [Cc])
+                menu2
+                read -r num1
+                case $num1 in 
+                    [Xx]) 
+                        exit 0
+                        ;;
+                    *) 
+                        menu3
+                        read -r operation
+                        case $operation in
+                            [+])
+                                menu2
+                                read -r num2
+                                case $num2 in
+                                    [Xx]) 
+                                        exit 0
+                                        ;;
+                                    *)
+                                        add "$num1" "$num2"
+                                        sleep 3
+                                        ;;
+                                esac
+                                ;;
+                            [-])
+                                 menu2
+                                read -r num2
+                                case $num2 in
+                                    [Xx])
+                                        exit 0
+                                        ;;
+                                    *)    
+                                        subtract "$num1" "$num2"
+                                        sleep 3
+                                        ;;
+                                esac
+                                ;;
+                                
+                            [Xx])
+                                exit 0
+                                ;;
+                            *)
+                                echo "Invalid choicee. Please try again."
+                                sleep 2
+                                ;;
+                        esac
+                        ;;
+                esac
+                ;;
+            [Xx])
+                exit 0
+                ;;
+            *)
+                echo "Invalid choice. Please try again."
+                sleep 2
+                ;;
+        esac
+    done
+# this part of the script runs when the user has entered three parameters while running the script; it then reads all three inputs and performs the calculation, else it displays error messages if the input is not in the correct way.   
+elif [ "$#" -eq 3 ]; then
+    num1="$1"
+    operator="$2"
+    num2="$3"
+
+    case $operator in
+        [+])
+            add "$num1" "$num2"
+            ;;
+        [-])
+            subtract "$num1" "$num2"
+            ;;
+        *)
+            echo "Invalid operator. Please use + or -."
+            exit 1
+            ;;
+    esac
+else
+    echo "Invalid number of parameters. Usage: $0 [num1 +/- num2]"
+    exit 1
+fi
